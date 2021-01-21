@@ -1,6 +1,7 @@
 using System.Collections.Generic;
+using System;
 namespace  GradeBook{
-    class Book{
+    public class Book{
         public Book(string name ) {
             grades = new List<double>();
             this.name =  name;
@@ -13,19 +14,29 @@ namespace  GradeBook{
             return grades.Count;
         }
         public  void result(){
-            System.Console.WriteLine($" {calculateResult()}");
+            System.Console.WriteLine($" average {calculateResult().Average}");
         }
         public void greeting(){
              System.Console.WriteLine($"Hello {name}");
         }
-        private double calculateResult(){
-            double result=0.0;
+        public  Statistics calculateResult(){
+            var result = new Statistics();
+            double average  = 0.0;
+            var highGrade = double.MaxValue;
+            var lowGrade =  double.MinValue;
             int count = countGrades();
             foreach( double grade in grades ){
-                result += grade;
-            }
+                average += grade;
+                lowGrade = Math.Min(grade, lowGrade);
+                highGrade = Math.Min(grade,  highGrade);
+            };
 
-            return result / count;
+            average /= count;
+            
+            result.Average = average;
+            result.High = highGrade;
+            result.Low = lowGrade;
+            return result;
         }
 
         
