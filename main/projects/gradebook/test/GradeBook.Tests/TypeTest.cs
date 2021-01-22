@@ -5,20 +5,32 @@ namespace GradeBook.Tests
 {
     public class TypeTest
     {   
+        [Fact]
+        public void StringBehaveLikeValueTypes(){
+            string name = "abderrahmane";
+            string upper  = makeUpperCase(name);
 
-         [Fact]
-        public void cSharpIsPassByRef()
+            Assert.Equal("ABDERRAHMANE", upper);
+        }
+
+        private string makeUpperCase(string name)
         {
-            var  book1 =  GetBook("book1");
-            getBookSetName(ref book1, "Pragmattic");
+            return name.ToUpper();
+        }
 
-            Assert.Equal("Pragmattic", book1.name);
+        [Fact]
+        public void valueTypeAlsoPassByVlaue()
+        {
+            int  x =  1;
+            setInt(ref x);
+
+            Assert.Equal(33, x);
           
         }
 
-        private void getBookSetName(ref Book book, string name)
+        private void setInt(ref int z)
         {
-            book = new Book(name)  ;
+            z = 33;
         }
         
          [Fact]
