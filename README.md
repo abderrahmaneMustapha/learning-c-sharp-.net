@@ -11,3 +11,7 @@
 > FCL  :  framework class library  contains code that is already develped and tested by other devs
 
 > .dll : is an assembly not the same as windows dll
+
+> string are ref type behave like value type
+
+> c sharp solution dotnet sol
