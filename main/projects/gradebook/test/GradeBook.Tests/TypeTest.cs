@@ -3,8 +3,32 @@ using Xunit;
 
 namespace GradeBook.Tests
 {
+    public delegate string writeLogDelegate(string LogMessage);
     public class TypeTest
     {   
+        int count = 0;
+        [Fact]
+        public void writeLogDelegateCanPointToMethod(){
+            writeLogDelegate logDelegate = returnMessage;
+            logDelegate += returnMessage;
+            logDelegate += incrementMessage;
+
+            var result =  logDelegate("Hello guys ....");
+
+            Assert.Equal(3, count);
+
+        }
+
+        string incrementMessage(string message){
+            count++;
+            return message;
+        }
+
+        string returnMessage(string message){
+            count++;
+            return message;
+        }
+
         [Fact]
         public void StringBehaveLikeValueTypes(){
             string name = "abderrahmane";
@@ -39,7 +63,7 @@ namespace GradeBook.Tests
             var  book1 =  GetBook("book1");
             getBookSetName(book1, "Pragmattic");
 
-            Assert.Equal("book1", book1.name);
+            Assert.Equal("book1", book1.Name);
           
         }
 
@@ -53,13 +77,13 @@ namespace GradeBook.Tests
             var  book1 =  GetBook("book1");
             setName(book1, "Pragmattic");
 
-            Assert.Equal("Pragmattic", book1.name);
+            Assert.Equal("Pragmattic", book1.Name);
           
         }
 
         private void setName(Book book, string name)
         {
-             book.name = name;
+             book.Name = name;
         }
 
         [Fact]
@@ -68,8 +92,8 @@ namespace GradeBook.Tests
             var  book1 =  GetBook("book1");
             var  book2 =  GetBook("book2");
 
-            Assert.Equal("book1", book1.name);
-            Assert.Equal("book2", book2.name);
+            Assert.Equal("book1", book1.Name);
+            Assert.Equal("book2", book2.Name);
 
             Assert.NotSame(book1, book2);
         }

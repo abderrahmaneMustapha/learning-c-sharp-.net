@@ -15,3 +15,5 @@
 > string are ref type behave like value type
 
 > c sharp solution dotnet sol
+
+> readonly can be changed only on constructor
