@@ -9,22 +9,35 @@ namespace src
 
         {
             const int BUCKET_SIZE_LIMIT = 100;
+
             int actual_bucket_size = BUCKET_SIZE_LIMIT;
+
             int[] inputs_list = { 22, 5, 50, 44, 1, 3, 64, 30, 29 };
+
             const int OUTPUT_SIZE = 20;
+
             int index = 0;
+
+            // check if the value added to the bucket or not
+            // if the bucket is full valueAdded is gonna be false
+            // if not the valueAdded is gonna be true
             Boolean valueAdded = true;
+
             while (true)
             {
                 int input = inputs_list[index];
+
                 valueAdded = fillBucketOrNot(ref actual_bucket_size, input);
+
                 actual_bucket_size = drop(BUCKET_SIZE_LIMIT, actual_bucket_size, OUTPUT_SIZE);
 
                 index = advance(index, valueAdded);
+
                 if (index == inputs_list.Length)
                 {
                     break;
                 }
+
             }
         }
 
