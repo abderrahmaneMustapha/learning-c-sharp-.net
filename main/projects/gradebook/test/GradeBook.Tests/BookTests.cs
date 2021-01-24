@@ -8,9 +8,7 @@ namespace GradeBook.Tests
          [Fact]
         public void cantAddMorethen100LessThen0()
         {
-            Book book = new Book("New book");
-
-            book.greeting();
+            InMemmoryBook book = new InMemmoryBook("New book");
 
             book.addGrade(1);
             book.addGrade(1);
@@ -32,9 +30,7 @@ namespace GradeBook.Tests
         [Fact]
         public void calculateResults()
         {
-            Book book = new Book("abderrahmane");
-
-            book.greeting();
+            InMemmoryBook book = new InMemmoryBook("abderrahmane");
 
             book.addGrade(1);
             book.addGrade(1);

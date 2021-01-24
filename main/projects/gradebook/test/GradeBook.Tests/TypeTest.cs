@@ -67,9 +67,9 @@ namespace GradeBook.Tests
           
         }
 
-        private void getBookSetName(Book book, string name)
+        private void getBookSetName(InMemmoryBook book, string name)
         {
-            book = new Book(name)  ;
+            book = new InMemmoryBook(name)  ;
         }
          [Fact]
         public void canSetNameFromReference()
@@ -81,7 +81,7 @@ namespace GradeBook.Tests
           
         }
 
-        private void setName(Book book, string name)
+        private void setName(InMemmoryBook book, string name)
         {
              book.Name = name;
         }
@@ -106,8 +106,8 @@ namespace GradeBook.Tests
             Assert.Same(book1, book2);
         }
 
-        Book GetBook(string name){
-            return new Book(name);
+        InMemmoryBook GetBook(string name){
+            return new InMemmoryBook(name);
         }
     }
 }
