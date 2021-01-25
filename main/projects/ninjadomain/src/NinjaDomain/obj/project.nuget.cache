@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "CCKfxVBJYHwlVRC7i9KnqSfVdTIQbb82g9Y8NZV4ZYnpqOMlVzj8XxIP5ibXL2j0STegcciq48IGvZZmD2bBgQ==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\icom\\myProjects\\learning C#\\main\\projects\\ninjadomain\\src\\NinjaDomain\\NinjaDomain.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\icom\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
+    "C:\\Users\\icom\\.nuget\\packages\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}
