@@ -6,6 +6,29 @@ namespace ConsoleApplication
 {
     class Program
     {
+
+        private static void simpleProjectionQuery()
+        {
+            using (var context = new NinjaContext())
+            {
+                context.Database.Log = Console.WriteLine;
+                var ninjas = context.ninjas.
+                        Select(n => new { n.name, n.dateOfBirth, n.equipementOwned })
+                        .ToList();
+            }
+        }
+                private static void simpleNinjaGraphQuery()
+        {
+            using (var context = new NinjaContext())
+            {
+                context.Database.Log = Console.WriteLine;
+                var ninja = context.ninjas.FirstOrDefault(n => n.name.StartsWith("Ab"));
+                Console.WriteLine(ninja.name);
+                // Explicite loading
+                context.Entry(ninja).Collection(n => n.equipementOwned).Load();
+                // add virtual to the field if you a lazy loading
+            }
+        }
         private static void insertNinjaWithEquipement()
         {
             using (var context = new NinjaContext())
@@ -103,6 +126,8 @@ namespace ConsoleApplication
             queryAndUpdateNinja();
             DeleteNinja();
             insertNinjaWithEquipement();
+            simpleNinjaGraphQuery();
+            simpleProjectionQuery();
         }
     }
 }
