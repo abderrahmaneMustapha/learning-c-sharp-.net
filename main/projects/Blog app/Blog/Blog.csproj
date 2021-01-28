@@ -217,6 +217,18 @@
     <Compile Include="Migrations\202101281458136_password-as-string-again.Designer.cs">
       <DependentUpon>202101281458136_password-as-string-again.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202101282238381_change-email-range.cs" />
+    <Compile Include="Migrations\202101282238381_change-email-range.Designer.cs">
+      <DependentUpon>202101282238381_change-email-range.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202101282253009_change-email-range-1.cs" />
+    <Compile Include="Migrations\202101282253009_change-email-range-1.Designer.cs">
+      <DependentUpon>202101282253009_change-email-range-1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202101282255219_no-more-email-range.cs" />
+    <Compile Include="Migrations\202101282255219_no-more-email-range.Designer.cs">
+      <DependentUpon>202101282255219_no-more-email-range.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Classes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -328,6 +340,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202101281458136_password-as-string-again.resx">
       <DependentUpon>202101281458136_password-as-string-again.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202101282238381_change-email-range.resx">
+      <DependentUpon>202101282238381_change-email-range.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202101282253009_change-email-range-1.resx">
+      <DependentUpon>202101282253009_change-email-range-1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202101282255219_no-more-email-range.resx">
+      <DependentUpon>202101282255219_no-more-email-range.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

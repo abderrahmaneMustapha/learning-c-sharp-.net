@@ -1,10 +1,8 @@
-﻿
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 namespace Blog.Models
 {
-   public class User
+    public class User
     {
         [Key]
         public int id { get; set; }
@@ -17,17 +15,16 @@ namespace Blog.Models
         [Display(Name = "Email address")]
         [Required(ErrorMessage = "The email address is required")]
         [EmailAddress(ErrorMessage = "Invalid Email Address")]
-        [Range(10, 50)]
         public string email { get; set; }
 
-       
+
         [MaxLength(50)]
         [Display(Name = "Password")]
         public string password { get; set; }
-       
+
         public bool is_staff { get; set; }
 
-      
+
     }
 
     public class UserLoginDto
@@ -36,7 +33,7 @@ namespace Blog.Models
         [Display(Name = "Email address")]
         [Required(ErrorMessage = "The email address is required")]
         [EmailAddress(ErrorMessage = "Invalid Email Address")]
-        [Range(10, 50)]
+    
         public string email { get; set; }
 
         [MaxLength(50)]
@@ -51,7 +48,7 @@ namespace Blog.Models
         [Display(Name = "Email address")]
         [Required(ErrorMessage = "The email address is required")]
         [EmailAddress(ErrorMessage = "Invalid Email Address")]
-        [Range(10, 50)]
+ 
         public string email { get; set; }
 
         [MaxLength(50)]
