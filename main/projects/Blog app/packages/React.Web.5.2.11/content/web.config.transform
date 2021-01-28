@@ -1,0 +1,8 @@
+<configuration>
+	<system.webServer>
+		<handlers>
+			<remove name="Babel" />
+			<add name="Babel" verb="GET" path="*.jsx" type="React.Web.BabelHandlerFactory, React.Web" preCondition="integratedMode" />
+		</handlers>
+	</system.webServer>
+</configuration>
