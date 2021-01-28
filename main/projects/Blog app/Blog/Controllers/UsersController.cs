@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
+using System.Web.Mvc;
 using Blog.Data;
 using Blog.Models;
 
@@ -70,14 +71,21 @@ namespace Blog.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/Users
+        // POST: api/Register
         [ResponseType(typeof(User))]
-        public IHttpActionResult PostUser(User user)
+        [ValidateAntiForgeryToken]
+        public IHttpActionResult Register(User user)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+            var check = db.Users.Any(s => s.email == s.email);
+            if (check)
+            {
+                return BadRequest();
+            }
+
 
             db.Users.Add(user);
             db.SaveChanges();
@@ -85,6 +93,27 @@ namespace Blog.Controllers
             return CreatedAtRoute("DefaultApi", new { id = user.id }, user);
         }
 
+        [ResponseType(typeof(User))]
+        [ValidateAntiForgeryToken]
+        // POST: api/Login
+        public IHttpActionResult Login(User user)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var check = db.Users.Any(s => s.email == s.email);
+            if (check)
+            {
+                return BadRequest();
+            }
+
+
+            db.Users.Add(user);
+            db.SaveChanges();
+
+            return CreatedAtRoute("DefaultApi", new { id = user.id }, user);
+        }
         // DELETE: api/Users/5
         [ResponseType(typeof(User))]
         public IHttpActionResult DeleteUser(int id)
