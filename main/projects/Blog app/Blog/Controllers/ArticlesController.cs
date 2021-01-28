@@ -1,124 +1,129 @@
-﻿using System;
-using System.Collections.Generic;
+﻿
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
-using System.Web;
-using System.Web.Mvc;
+using System.Web.Http;
+using System.Web.Http.Description;
 using Blog.Data;
 using Blog.Models;
 
 namespace Blog.Controllers
 {
-    public class ArticlesController : Controller
+    public class ArticlesController : ApiController
     {
         private BlogContext db = new BlogContext();
 
-        // GET: Articles
-        public ActionResult Index()
+        // GET: api/Articles
+        public IQueryable<ArticleDto> GetArticles()
         {
-            var articles = db.Articles.Include(a => a.author);
-            return View(articles.ToList());
+            var articles = from article in db.Articles
+                           select new ArticleDto()
+                           {
+                               id = article.id,
+                               title = article.title,
+                               authorId = article.authorId
+                           };
+            return articles;
         }
 
-        // GET: Articles/Details/5
-        public ActionResult Details(int? id)
+        // GET: api/Articles/5
+        [ResponseType(typeof(ArticleDetailDto))]
+        public IHttpActionResult GetArticle(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Article article = db.Articles.Find(id);
+            var article = db.Articles.Include(b => b.author).Select(
+                b
+                => new ArticleDetailDto()
+                {
+                    id = b.id,
+                    title = b.title,
+                    authorId = b.authorId,
+                    thumbnail = b.thumbnail
+
+                }
+                );
             if (article == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
-            return View(article);
+
+            return Ok(article);
         }
 
-        // GET: Articles/Create
-        public ActionResult Create()
+        // PUT: api/Articles/5
+        [ResponseType(typeof(void))]
+        public IHttpActionResult PutArticle(int id, Article article)
         {
-            ViewBag.authorId = new SelectList(db.Authors, "id", "id");
-            return View();
-        }
-
-        // POST: Articles/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "id,title,content,thumbnail,authorId")] Article article)
-        {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                db.Articles.Add(article);
+                return BadRequest(ModelState);
+            }
+
+            if (id != article.id)
+            {
+                return BadRequest();
+            }
+
+            db.Entry(article).State = EntityState.Modified;
+
+            try
+            {
                 db.SaveChanges();
-                return RedirectToAction("Index");
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ArticleExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
             }
 
-            ViewBag.authorId = new SelectList(db.Authors, "id", "id", article.authorId);
-            return View(article);
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // GET: Articles/Edit/5
-        public ActionResult Edit(int? id)
+        // POST: api/Articles
+        [ResponseType(typeof(Article))]
+        public IHttpActionResult PostArticle(Article article)
         {
-            if (id == null)
+            if (!ModelState.IsValid)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return BadRequest(ModelState);
             }
+
+            db.Articles.Add(article);
+            db.SaveChanges();
+
+            db.Entry(article).Reference(x => x.author).Load();
+
+            var articleDto = new ArticleDto()
+            {
+                id = article.id,
+                title = article.title,
+                authorId = article.authorId
+            };
+
+            return CreatedAtRoute("DefaultApi", new { id = article.id }, articleDto);
+        }
+
+        // DELETE: api/Articles/5
+        [ResponseType(typeof(Article))]
+        public IHttpActionResult DeleteArticle(int id)
+        {
             Article article = db.Articles.Find(id);
             if (article == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
-            ViewBag.authorId = new SelectList(db.Authors, "id", "id", article.authorId);
-            return View(article);
-        }
 
-        // POST: Articles/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "id,title,content,thumbnail,authorId")] Article article)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(article).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            ViewBag.authorId = new SelectList(db.Authors, "id", "id", article.authorId);
-            return View(article);
-        }
-
-        // GET: Articles/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Article article = db.Articles.Find(id);
-            if (article == null)
-            {
-                return HttpNotFound();
-            }
-            return View(article);
-        }
-
-        // POST: Articles/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            Article article = db.Articles.Find(id);
             db.Articles.Remove(article);
             db.SaveChanges();
-            return RedirectToAction("Index");
+
+            return Ok(article);
         }
 
         protected override void Dispose(bool disposing)
@@ -128,6 +133,11 @@ namespace Blog.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        private bool ArticleExists(int id)
+        {
+            return db.Articles.Count(e => e.id == id) > 0;
         }
     }
 }

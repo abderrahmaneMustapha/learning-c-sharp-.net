@@ -2,118 +2,104 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
-using System.Web;
-using System.Web.Mvc;
+using System.Net.Http;
+using System.Web.Http;
+using System.Web.Http.Description;
 using Blog.Data;
 using Blog.Models;
 
 namespace Blog.Controllers
 {
-    public class AuthorsController : Controller
+    public class AuthorsController : ApiController
     {
         private BlogContext db = new BlogContext();
 
-        // GET: Authors
-        public ActionResult Index()
+        // GET: api/Authors
+        public IQueryable<Author> GetAuthors()
         {
-            return View(db.Authors.ToList());
+            return db.Authors;
         }
 
-        // GET: Authors/Details/5
-        public ActionResult Details(int? id)
+        // GET: api/Authors/5
+        [ResponseType(typeof(Author))]
+        public IHttpActionResult GetAuthor(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
             Author author = db.Authors.Find(id);
             if (author == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
-            return View(author);
+
+            return Ok(author);
         }
 
-        // GET: Authors/Create
-        public ActionResult Create()
+        // PUT: api/Authors/5
+        [ResponseType(typeof(void))]
+        public IHttpActionResult PutAuthor(int id, Author author)
         {
-            return View();
-        }
-
-        // POST: Authors/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "id")] Author author)
-        {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                db.Authors.Add(author);
+                return BadRequest(ModelState);
+            }
+
+            if (id != author.id)
+            {
+                return BadRequest();
+            }
+
+            db.Entry(author).State = EntityState.Modified;
+
+            try
+            {
                 db.SaveChanges();
-                return RedirectToAction("Index");
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!AuthorExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
             }
 
-            return View(author);
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // GET: Authors/Edit/5
-        public ActionResult Edit(int? id)
+        // POST: api/Authors
+        [ResponseType(typeof(Author))]
+        public IHttpActionResult PostAuthor(Author author)
         {
-            if (id == null)
+            if (!ModelState.IsValid)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return BadRequest(ModelState);
             }
+
+            db.Authors.Add(author);
+            db.SaveChanges();
+
+            return CreatedAtRoute("DefaultApi", new { id = author.id }, author);
+        }
+
+        // DELETE: api/Authors/5
+        [ResponseType(typeof(Author))]
+        public IHttpActionResult DeleteAuthor(int id)
+        {
             Author author = db.Authors.Find(id);
             if (author == null)
             {
-                return HttpNotFound();
+                return NotFound();
             }
-            return View(author);
-        }
 
-        // POST: Authors/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "id")] Author author)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(author).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(author);
-        }
-
-        // GET: Authors/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Author author = db.Authors.Find(id);
-            if (author == null)
-            {
-                return HttpNotFound();
-            }
-            return View(author);
-        }
-
-        // POST: Authors/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            Author author = db.Authors.Find(id);
             db.Authors.Remove(author);
             db.SaveChanges();
-            return RedirectToAction("Index");
+
+            return Ok(author);
         }
 
         protected override void Dispose(bool disposing)
@@ -123,6 +109,11 @@ namespace Blog.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        private bool AuthorExists(int id)
+        {
+            return db.Authors.Count(e => e.id == id) > 0;
         }
     }
 }

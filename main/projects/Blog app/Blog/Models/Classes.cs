@@ -32,4 +32,25 @@ namespace Blog.Models
         public int authorId { get; set; }
         public Author author { get; set; }
     }
+
+    public class ArticleDto
+    {
+        public int id { get; set; }
+        public string title { get; set; }
+        public int authorId { get; set; }
+
+    }
+
+
+    public class ArticleDetailDto
+    {
+        public int id { get; set; }
+        public string title { get; set; }
+        public string content { get; set; }
+        public byte[] thumbnail { get; set; }
+        public int authorId { get; set; }
+
+    }
+
+
 }

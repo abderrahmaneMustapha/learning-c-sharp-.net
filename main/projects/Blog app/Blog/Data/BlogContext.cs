@@ -18,9 +18,10 @@ namespace Blog.Data
         public BlogContext() : base("name=BlogContext")
         {
         }
-
         public System.Data.Entity.DbSet<Blog.Models.Author> Authors { get; set; }
 
         public System.Data.Entity.DbSet<Blog.Models.Article> Articles { get; set; }
+
+        public System.Data.Entity.DbSet<Blog.Models.User> Users { get; set; }
     }
 }
