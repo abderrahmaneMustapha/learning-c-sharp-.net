@@ -213,6 +213,10 @@
     <Compile Include="Migrations\202101281319029_secure-password-more-description.Designer.cs">
       <DependentUpon>202101281319029_secure-password-more-description.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202101281458136_password-as-string-again.cs" />
+    <Compile Include="Migrations\202101281458136_password-as-string-again.Designer.cs">
+      <DependentUpon>202101281458136_password-as-string-again.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Classes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -321,6 +325,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202101281319029_secure-password-more-description.resx">
       <DependentUpon>202101281319029_secure-password-more-description.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202101281458136_password-as-string-again.resx">
+      <DependentUpon>202101281458136_password-as-string-again.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

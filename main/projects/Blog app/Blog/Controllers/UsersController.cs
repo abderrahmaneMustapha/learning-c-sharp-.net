@@ -1,22 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using Blog.Data;
+using Blog.Models;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
 using System.Web.Mvc;
-using Blog.Data;
-using Blog.Models;
 
 namespace Blog.Controllers
 {
     public class UsersController : ApiController
     {
         private BlogContext db = new BlogContext();
-
+ 
         // GET: api/Users
         public IQueryable<User> GetUsers()
         {
@@ -72,29 +70,40 @@ namespace Blog.Controllers
         }
 
         // POST: api/Register
+        [System.Web.Http.Route("api/Register")]
         [ResponseType(typeof(User))]
         [ValidateAntiForgeryToken]
+        [System.Web.Http.HttpPost]
         public IHttpActionResult Register(User user)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var check = db.Users.Any(s => s.email == s.email);
+
+
+            var check = db.Users.Any(s => s.email == user.email);
             if (check)
             {
                 return BadRequest();
             }
 
+            user.is_staff = false;
+            var dbuser = db.Users.Add(user);
 
-            db.Users.Add(user);
+            db.Configuration.ValidateOnSaveEnabled = false;
             db.SaveChanges();
 
-            return CreatedAtRoute("DefaultApi", new { id = user.id }, user);
+            
+
+            return CreatedAtRoute("DefaultApi", new { id = dbuser.id }, dbuser);
         }
 
+
+        [System.Web.Http.Route("api/Login")]
         [ResponseType(typeof(User))]
         [ValidateAntiForgeryToken]
+        [System.Web.Http.HttpPost]
         // POST: api/Login
         public IHttpActionResult Login(User user)
         {
@@ -102,17 +111,15 @@ namespace Blog.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var check = db.Users.Any(s => s.email == s.email);
-            if (check)
+            var check = db.Users.Any(s => s.password == user.password && s.email == user.email);
+            if (!check)
             {
                 return BadRequest();
             }
 
+            var dbuser = db.Users.Where(s => s.email == user.email).FirstOrDefault();
 
-            db.Users.Add(user);
-            db.SaveChanges();
-
-            return CreatedAtRoute("DefaultApi", new { id = user.id }, user);
+            return CreatedAtRoute("DefaultApi", new { id = dbuser.id }, dbuser);
         }
         // DELETE: api/Users/5
         [ResponseType(typeof(User))]

@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 namespace Blog.Models
@@ -22,13 +23,49 @@ namespace Blog.Models
        
         [MaxLength(50)]
         [Display(Name = "Password")]
-        public System.Security.SecureString password { get; set; }
+        public string password { get; set; }
        
         public bool is_staff { get; set; }
 
+      
     }
 
-  
+    public class UserLoginDto
+    {
+
+        [Display(Name = "Email address")]
+        [Required(ErrorMessage = "The email address is required")]
+        [EmailAddress(ErrorMessage = "Invalid Email Address")]
+        [Range(10, 50)]
+        public string email { get; set; }
+
+        [MaxLength(50)]
+        [Display(Name = "Password")]
+        public string password { get; set; }
+
+    }
+
+    public class UserRegisterDto
+    {
+
+        [Display(Name = "Email address")]
+        [Required(ErrorMessage = "The email address is required")]
+        [EmailAddress(ErrorMessage = "Invalid Email Address")]
+        [Range(10, 50)]
+        public string email { get; set; }
+
+        [MaxLength(50)]
+        [Display(Name = "Username")]
+        [Required]
+        public string username { get; set; }
+
+        [MaxLength(50)]
+        [Display(Name = "Password")]
+        public string password { get; set; }
+
+    }
+
+
 
 
 
